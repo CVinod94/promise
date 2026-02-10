@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promise Day for Kiki</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  position: absolute;
+  top: 20px;
+  color: white;
+  text-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.balloon {
+  position: absolute;
+  bottom: -100px;
+  width: 80px;
+  height: 100px;
+  border-radius: 50%;
+  cursor: pointer;
+  animation: floatUp linear infinite;
+}
+
+.balloon::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 50px;
+  background: white;
+  bottom: -50px;
+  left: 50%;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(-120vh); }
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  width: 80%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: 0.4s;
+}
+
+.popup.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+button {
+  margin-top: 15px;
+  padding: 8px 15px;
+  border: none;
+  background: #ff6b81;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.finalMessage {
+  font-size: 18px;
+  line-height: 1.6;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Happy Promise Day, Kiki ❤️</h1>
+
+<!-- Background Music -->
+<audio id="bgMusic" autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6f4b6c3b3c.mp3" type="audio/mp3">
+</audio>
+
+<div class="popup" id="popup">
+  <p id="popupText"></p>
+  <button onclick="closePopup()">Close</button>
+</div>
+
+<div class="popup" id="finalPopup">
+  <p class="finalMessage">
+    Kiki,  
+    these promises are not just words…  
+    they are my feelings for you.  
+    I promise to stand beside you,  
+    care for you,  
+    and love you more every single day. ❤️
+  </p>
+  <button onclick="goToTeddy()">See Your Teddy Surprise 🧸</button>
+</div>
+
+<script>
+const promises = [
+  "I promise to stand by you in every situation.",
+  "I promise to make you smile even on your hardest days.",
+  "I promise to respect your dreams and support them.",
+  "I promise to listen and understand your feelings.",
+  "I promise to be honest, loyal, and yours.",
+  "I promise to love you more every day."
+];
+
+let opened = 0;
+const totalPromises = 6;
+
+function createBalloon() {
+  const balloon = document.createElement("div");
+  balloon.classList.add("balloon");
+
+  const colors = ["#ff6b81", "#ff9ff3", "#feca57", "#1dd1a1", "#54a0ff"];
+  balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+  balloon.style.left = Math.random() * 90 + "vw";
+  balloon.style.animationDuration = (6 + Math.random() * 4) + "s";
+
+  balloon.onclick = () => {
+    const promise = promises[opened % promises.length];
+    document.getElementById("popupText").innerText = promise;
+    document.getElementById("popup").classList.add("show");
+    balloon.remove();
+
+    opened++;
+    if (opened >= totalPromises) {
+      setTimeout(showFinalMessage, 1000);
+    }
+  };
+
+  document.body.appendChild(balloon);
+
+  setTimeout(() => {
+    balloon.remove();
+  }, 10000);
+}
+
+function closePopup() {
+  document.getElementById("popup").classList.remove("show");
+}
+
+function showFinalMessage() {
+  document.getElementById("finalPopup").classList.add("show");
+}
+
+function goToTeddy() {
+  window.location.href = "teddy.html"; // link to your Teddy Day page
+}
+
+setInterval(createBalloon, 1000);
+</script>
+
+</body>
+</html>
