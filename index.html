@@ -89,23 +89,25 @@ button {
 
 <h1>Happy Promise Day, Kiki ❤️</h1>
 
-<!-- Background Music -->
+<!-- Background Music (from your repo) -->
 <audio id="bgMusic" autoplay loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6f4b6c3b3c.mp3" type="audio/mp3">
+  <source src="promise.aac" type="audio/aac">
 </audio>
 
+<!-- Promise popup -->
 <div class="popup" id="popup">
   <p id="popupText"></p>
   <button onclick="closePopup()">Close</button>
 </div>
 
+<!-- Final message -->
 <div class="popup" id="finalPopup">
   <p class="finalMessage">
-    Kiki,  
-    these promises are not just words…  
-    they are my feelings for you.  
-    I promise to stand beside you,  
-    care for you,  
+    Kiki,<br><br>
+    These promises are not just words…<br>
+    they are my feelings for you.<br><br>
+    I promise to stand beside you,<br>
+    care for you,<br>
     and love you more every single day. ❤️
   </p>
   <button onclick="goToTeddy()">See Your Teddy Surprise 🧸</button>
@@ -161,7 +163,7 @@ function showFinalMessage() {
 }
 
 function goToTeddy() {
-  window.location.href = "teddy.html"; // link to your Teddy Day page
+  window.location.href = "teddy.html";
 }
 
 setInterval(createBalloon, 1000);
