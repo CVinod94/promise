@@ -12,17 +12,15 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Title */
 h1 {
   position: absolute;
   top: 20px;
+  width: 100%;
+  text-align: center;
   color: white;
-  text-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 /* Floating hearts */
@@ -62,11 +60,11 @@ h1 {
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
   background: white;
-  padding: 30px;
+  padding: 25px;
   border-radius: 20px;
   text-align: center;
-  width: 80%;
-  max-width: 320px;
+  width: 85%;
+  max-width: 340px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   transition: 0.4s;
 }
@@ -85,13 +83,15 @@ button {
   cursor: pointer;
 }
 
-/* Big final heart */
+/* Big heart */
 .bigHeart {
   position: absolute;
+  top: 50%;
+  left: 50%;
   width: 120px;
   height: 120px;
   background: #ff4d6d;
-  transform: rotate(45deg) scale(0);
+  transform: translate(-50%, -50%) rotate(45deg) scale(0);
   opacity: 0;
   cursor: pointer;
   transition: 0.8s;
@@ -111,20 +111,43 @@ button {
 .bigHeart::after { left: -60px; top: 0; }
 
 .bigHeart.show {
-  transform: rotate(45deg) scale(1);
+  transform: translate(-50%, -50%) rotate(45deg) scale(1);
   opacity: 1;
   animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-  0% { transform: rotate(45deg) scale(1); }
-  50% { transform: rotate(45deg) scale(1.1); }
-  100% { transform: rotate(45deg) scale(1); }
+  0% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(45deg) scale(1.1); }
+  100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+}
+
+/* Explosion hearts */
+.explosion {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: red;
+  transform: rotate(45deg);
+  animation: explode 1s forwards;
+}
+
+@keyframes explode {
+  to {
+    transform: translate(var(--x), var(--y)) rotate(45deg);
+    opacity: 0;
+  }
 }
 
 .finalMessage {
   font-size: 18px;
   line-height: 1.6;
+}
+
+.finalMessage img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 </style>
 </head>
@@ -133,7 +156,6 @@ button {
 
 <h1>Happy Promise Day, Kiki ❤️</h1>
 
-<!-- Music -->
 <audio autoplay loop>
   <source src="promise.aac" type="audio/aac">
 </audio>
@@ -146,20 +168,13 @@ button {
 
 <!-- Final message -->
 <div class="popup" id="finalPopup">
-  <p class="finalMessage">
-    Kiki,<br><br>
-    Every promise I made today<br>
-    comes straight from my heart.<br><br>
-    I don’t promise a perfect life…<br>
-    but I promise to love you,<br>
-    respect you,<br>
-    and stay beside you<br>
-    through every moment. ❤️
-  </p>
+  <div class="finalMessage">
+    <img src="A_digital_screenshot_features_a_Promise_Day_webpag.png" alt="Promise Hands">
+    <p id="typedText"></p>
+  </div>
 </div>
 
-<!-- Big final heart -->
-<div class="bigHeart" id="bigHeart" onclick="showFinalMessage()"></div>
+<div class="bigHeart" id="bigHeart" onclick="explodeHeart()"></div>
 
 <script>
 const promises = [
@@ -172,49 +187,90 @@ const promises = [
 ];
 
 let opened = 0;
-const totalPromises = promises.length;
 
 function createHeart() {
-  if (opened >= totalPromises) return;
+  if (opened >= promises.length) return;
 
   const heart = document.createElement("div");
   heart.classList.add("heart");
 
-  const colors = ["#ff4d6d", "#ff6b81", "#ff85a1", "#ff99ac"];
+  const colors = ["#ff4d6d", "#ff6b81", "#ff85a1"];
   heart.style.background = colors[Math.floor(Math.random() * colors.length)];
   heart.style.left = Math.random() * 90 + "vw";
-  heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+  heart.style.animationDuration = (10 + Math.random() * 4) + "s"; // slower
 
   heart.onclick = () => {
-    const promise = promises[opened];
-    document.getElementById("popupText").innerText = promise;
+    document.getElementById("popupText").innerText = promises[opened];
     document.getElementById("popup").classList.add("show");
     heart.remove();
-
     opened++;
-    if (opened >= totalPromises) {
-      setTimeout(showBigHeart, 800);
+
+    if (opened >= promises.length) {
+      setTimeout(() => {
+        document.getElementById("bigHeart").classList.add("show");
+      }, 800);
     }
   };
 
   document.body.appendChild(heart);
-
-  setTimeout(() => heart.remove(), 10000);
+  setTimeout(() => heart.remove(), 15000);
 }
 
 function closePopup() {
   document.getElementById("popup").classList.remove("show");
 }
 
-function showBigHeart() {
-  document.getElementById("bigHeart").classList.add("show");
+function explodeHeart() {
+  const bigHeart = document.getElementById("bigHeart");
+  const rect = bigHeart.getBoundingClientRect();
+
+  for (let i = 0; i < 20; i++) {
+    const e = document.createElement("div");
+    e.classList.add("explosion");
+    e.style.left = rect.left + rect.width/2 + "px";
+    e.style.top = rect.top + rect.height/2 + "px";
+    e.style.setProperty("--x", (Math.random()*300-150)+"px");
+    e.style.setProperty("--y", (Math.random()*300-150)+"px");
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 1000);
+  }
+
+  bigHeart.style.display = "none";
+  showFinalMessage();
 }
 
 function showFinalMessage() {
   document.getElementById("finalPopup").classList.add("show");
+  typeMessage();
 }
 
-setInterval(createHeart, 900);
+function typeMessage() {
+  const text = `Kiki,
+
+Every promise I made today
+comes straight from my heart.
+
+I don’t promise a perfect life…
+but I promise to love you,
+respect you,
+and stay beside you
+through every moment. ❤️`;
+
+  let i = 0;
+  const speed = 40;
+  const target = document.getElementById("typedText");
+
+  function type() {
+    if (i < text.length) {
+      target.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+}
+
+setInterval(createHeart, 1200);
 </script>
 
 </body>
