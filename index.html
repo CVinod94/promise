@@ -151,7 +151,8 @@ button {
 
 <h1>Happy Promise Day, Kiki ❤️</h1>
 
-<audio autoplay loop>
+<!-- Music -->
+<audio id="bgMusic" loop>
   <source src="promise.aac" type="audio/aac">
 </audio>
 
@@ -182,6 +183,15 @@ const promises = [
 ];
 
 let opened = 0;
+
+/* Start music on first tap (WhatsApp fix) */
+document.body.addEventListener("click", function startMusic() {
+  const music = document.getElementById("bgMusic");
+  if (music.paused) {
+    music.play();
+  }
+  document.body.removeEventListener("click", startMusic);
+});
 
 function createHeart() {
   if (opened >= promises.length) return;
@@ -236,8 +246,7 @@ function explodeHeart() {
 
 function showFinalMessage() {
   document.getElementById("finalPopup").classList.add("show");
-
-  setTimeout(typeMessage, 1500); // wait for hand animation
+  setTimeout(typeMessage, 1500);
 }
 
 function typeMessage() {
