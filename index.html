@@ -17,6 +17,7 @@ body {
   align-items: center;
 }
 
+/* Title */
 h1 {
   position: absolute;
   top: 20px;
@@ -24,31 +25,37 @@ h1 {
   text-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-.balloon {
+/* Floating hearts */
+.heart {
   position: absolute;
-  bottom: -100px;
-  width: 80px;
-  height: 100px;
-  border-radius: 50%;
-  cursor: pointer;
+  bottom: -50px;
+  width: 40px;
+  height: 40px;
+  background: red;
+  transform: rotate(45deg);
   animation: floatUp linear infinite;
+  cursor: pointer;
 }
 
-.balloon::after {
+.heart::before,
+.heart::after {
   content: "";
   position: absolute;
-  width: 2px;
-  height: 50px;
-  background: white;
-  bottom: -50px;
-  left: 50%;
+  width: 40px;
+  height: 40px;
+  background: inherit;
+  border-radius: 50%;
 }
+
+.heart::before { top: -20px; left: 0; }
+.heart::after { left: -20px; top: 0; }
 
 @keyframes floatUp {
-  from { transform: translateY(0); }
-  to { transform: translateY(-120vh); }
+  from { transform: translateY(0) rotate(45deg); }
+  to { transform: translateY(-120vh) rotate(45deg); }
 }
 
+/* Popup */
 .popup {
   position: fixed;
   top: 50%;
@@ -78,6 +85,43 @@ button {
   cursor: pointer;
 }
 
+/* Big final heart */
+.bigHeart {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: #ff4d6d;
+  transform: rotate(45deg) scale(0);
+  opacity: 0;
+  cursor: pointer;
+  transition: 0.8s;
+}
+
+.bigHeart::before,
+.bigHeart::after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.bigHeart::before { top: -60px; left: 0; }
+.bigHeart::after { left: -60px; top: 0; }
+
+.bigHeart.show {
+  transform: rotate(45deg) scale(1);
+  opacity: 1;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: rotate(45deg) scale(1); }
+  50% { transform: rotate(45deg) scale(1.1); }
+  100% { transform: rotate(45deg) scale(1); }
+}
+
 .finalMessage {
   font-size: 18px;
   line-height: 1.6;
@@ -89,8 +133,8 @@ button {
 
 <h1>Happy Promise Day, Kiki ❤️</h1>
 
-<!-- Background Music (from your repo) -->
-<audio id="bgMusic" autoplay loop>
+<!-- Music -->
+<audio autoplay loop>
   <source src="promise.aac" type="audio/aac">
 </audio>
 
@@ -104,14 +148,18 @@ button {
 <div class="popup" id="finalPopup">
   <p class="finalMessage">
     Kiki,<br><br>
-    These promises are not just words…<br>
-    they are my feelings for you.<br><br>
-    I promise to stand beside you,<br>
-    care for you,<br>
-    and love you more every single day. ❤️
+    Every promise I made today<br>
+    comes straight from my heart.<br><br>
+    I don’t promise a perfect life…<br>
+    but I promise to love you,<br>
+    respect you,<br>
+    and stay beside you<br>
+    through every moment. ❤️
   </p>
-  <button onclick="goToTeddy()">See Your Teddy Surprise 🧸</button>
 </div>
+
+<!-- Big final heart -->
+<div class="bigHeart" id="bigHeart" onclick="showFinalMessage()"></div>
 
 <script>
 const promises = [
@@ -119,54 +167,54 @@ const promises = [
   "I promise to make you smile even on your hardest days.",
   "I promise to respect your dreams and support them.",
   "I promise to listen and understand your feelings.",
-  "I promise to be honest, loyal, and yours.",
-  "I promise to love you more every day."
+  "I promise to be honest and loyal to you.",
+  "I promise to love you more every single day."
 ];
 
 let opened = 0;
-const totalPromises = 6;
+const totalPromises = promises.length;
 
-function createBalloon() {
-  const balloon = document.createElement("div");
-  balloon.classList.add("balloon");
+function createHeart() {
+  if (opened >= totalPromises) return;
 
-  const colors = ["#ff6b81", "#ff9ff3", "#feca57", "#1dd1a1", "#54a0ff"];
-  balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
-  balloon.style.left = Math.random() * 90 + "vw";
-  balloon.style.animationDuration = (6 + Math.random() * 4) + "s";
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
 
-  balloon.onclick = () => {
-    const promise = promises[opened % promises.length];
+  const colors = ["#ff4d6d", "#ff6b81", "#ff85a1", "#ff99ac"];
+  heart.style.background = colors[Math.floor(Math.random() * colors.length)];
+  heart.style.left = Math.random() * 90 + "vw";
+  heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+
+  heart.onclick = () => {
+    const promise = promises[opened];
     document.getElementById("popupText").innerText = promise;
     document.getElementById("popup").classList.add("show");
-    balloon.remove();
+    heart.remove();
 
     opened++;
     if (opened >= totalPromises) {
-      setTimeout(showFinalMessage, 1000);
+      setTimeout(showBigHeart, 800);
     }
   };
 
-  document.body.appendChild(balloon);
+  document.body.appendChild(heart);
 
-  setTimeout(() => {
-    balloon.remove();
-  }, 10000);
+  setTimeout(() => heart.remove(), 10000);
 }
 
 function closePopup() {
   document.getElementById("popup").classList.remove("show");
 }
 
+function showBigHeart() {
+  document.getElementById("bigHeart").classList.add("show");
+}
+
 function showFinalMessage() {
   document.getElementById("finalPopup").classList.add("show");
 }
 
-function goToTeddy() {
-  window.location.href = "teddy.html";
-}
-
-setInterval(createBalloon, 1000);
+setInterval(createHeart, 900);
 </script>
 
 </body>
