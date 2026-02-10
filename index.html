@@ -14,7 +14,6 @@ body {
   height: 100vh;
 }
 
-/* Title */
 h1 {
   position: absolute;
   top: 20px;
@@ -139,11 +138,7 @@ button {
   }
 }
 
-.finalMessage {
-  font-size: 18px;
-  line-height: 1.6;
-}
-
+/* Final message */
 .finalMessage img {
   width: 100%;
   border-radius: 12px;
@@ -169,7 +164,7 @@ button {
 <!-- Final message -->
 <div class="popup" id="finalPopup">
   <div class="finalMessage">
-    <img src="A_digital_screenshot_features_a_Promise_Day_webpag.png" alt="Promise Hands">
+    <img src="promise-hands.gif" alt="Promise Hands">
     <p id="typedText"></p>
   </div>
 </div>
@@ -197,7 +192,7 @@ function createHeart() {
   const colors = ["#ff4d6d", "#ff6b81", "#ff85a1"];
   heart.style.background = colors[Math.floor(Math.random() * colors.length)];
   heart.style.left = Math.random() * 90 + "vw";
-  heart.style.animationDuration = (10 + Math.random() * 4) + "s"; // slower
+  heart.style.animationDuration = (12 + Math.random() * 4) + "s";
 
   heart.onclick = () => {
     document.getElementById("popupText").innerText = promises[opened];
@@ -213,7 +208,7 @@ function createHeart() {
   };
 
   document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 15000);
+  setTimeout(() => heart.remove(), 18000);
 }
 
 function closePopup() {
@@ -241,7 +236,8 @@ function explodeHeart() {
 
 function showFinalMessage() {
   document.getElementById("finalPopup").classList.add("show");
-  typeMessage();
+
+  setTimeout(typeMessage, 1500); // wait for hand animation
 }
 
 function typeMessage() {
@@ -270,7 +266,7 @@ through every moment. ❤️`;
   type();
 }
 
-setInterval(createHeart, 1200);
+setInterval(createHeart, 1400);
 </script>
 
 </body>
